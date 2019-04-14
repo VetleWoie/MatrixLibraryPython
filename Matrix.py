@@ -54,4 +54,10 @@ class Matrix():
         for i in range(0,self.cols-1):
             for j in range(0,self.rows-1):
                 new.mat[i][j] = self.mat[i][j] + other.mat[i][j]
-
+    
+    def __iadd__(self, other):
+        if self.rows != other.rows and self.cols != other.cols:
+            raise ValueError("Matrixes has to be of same size for addition")
+        for i in range(0,self.cols-1):
+            for j in range(0,self.rows-1):
+                self.mat[i][j] += other.mat[i][j]
