@@ -14,7 +14,7 @@ class Matrix():
             self.rows = len(matrix[0])
             self.cols = len(matrix)
 
-    def multiplication(A, B):
+    def matmul(A, B):
         if(self.cols != self.rows):
             raise ValueError("Matrix multiplication: Columns != Rows")
         new = Matrix(self.rows, other.cols)
@@ -23,9 +23,12 @@ class Matrix():
                 for k in range(0,self.cols-1):
                     new.mat[i][j] += self.mat[k][i]*other.mat[j][k]
         return new
+    
+    def scalmul(A,B):
+        
 
     def __mul__(self,other):
-        return multiplication(A,B)
+        if 
 
     def __add__(self,other):
 
