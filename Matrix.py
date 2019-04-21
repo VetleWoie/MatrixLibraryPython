@@ -61,3 +61,13 @@ class Matrix():
         for i in range(0,self.cols-1):
             for j in range(0,self.rows-1):
                 self.mat[i][j] += other.mat[i][j]
+    
+    def __sub__(self, other):
+        self.__add__(other * -1)
+    
+    def __isub__(self, other):
+        self.__iadd__(other * -1)
+
+class Vector(Matrix):
+    def __init__(self,dim):
+        Super.__init__(rows = dim, columns = 1)
