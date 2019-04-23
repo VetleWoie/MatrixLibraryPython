@@ -33,7 +33,7 @@ class Matrix():
                 new.mat[i][j] = self.mat[i][j] * other
         return new
 
-    def Trace(self):
+    def trace(self):
         if(self.rows != self.cols):
             raise ValueError("Trace can only be done on square matrix")
 
@@ -41,6 +41,30 @@ class Matrix():
         for i in range(0,self.rows-1):
             sum += self.mat[i][i]
         return sum
+
+    #Elementary row operations following:
+    def elementarySwap(self,row1, row2):
+        row1 -= 1
+        row2 -= 1
+        for i in range(0,self.cols):
+            tmp = self.mat[row1][i]
+            self.mat[row1][i] = self.mat[row2][i]
+            self.mat[row2][i] = tmp
+    
+    def elementaryMul(self, row, scal):
+        row -= 1
+        for i in range(0,self.cols):
+            self.mat[row][i] *= scal
+    
+    def elementaryAdd(self, row1, scal, row2):
+        row1 -= 1
+        row2 -= 1
+        for i in range(0,self.cols):
+            self.mat[row2][i] += self.mat[row1][i] * scal
+
+    
+    def rowreduce(self):
+        pass
 
 
     def __mul__(self,other):
@@ -65,6 +89,7 @@ class Matrix():
         for i in range(0,self.cols):
             for j in range(0,self.rows):
                 new.mat[i][j] = self.mat[i][j] + other.mat[i][j]
+        return new
     
     def __iadd__(self, other):
         if self.rows != other.rows and self.cols != other.cols:
@@ -80,7 +105,7 @@ class Matrix():
         self.__iadd__(other * -1)
     
     def __repr__(self):
-        return f'Matrix {self.rows} x {self.cols}, with {repr(self.mat[0][0])} Elements'
+        return f'Matrix {self.rows} x {self.cols}, with {type(self.mat[0][0])} elements\n'+f'{self}'
     
     def __str__(self):
         str = ''
@@ -97,5 +122,5 @@ class Vector(Matrix):
 
 
 x = Matrix(matrix=[[3,4,5],[4,5,6],[5,6,7]])
-y = Matrix(matrix=[[1,2,3],[2,3,4,],[4,5,6]])
+y = Matrix(matrix=[[1,2,3],[2,3,4],[4,5,6]])
 code.interact(local=locals())
