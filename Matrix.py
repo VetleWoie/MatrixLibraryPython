@@ -46,21 +46,49 @@ class Matrix():
     def elementarySwap(self,row1, row2):
         row1 -= 1
         row2 -= 1
-        for i in range(0,self.cols):
-            tmp = self.mat[row1][i]
-            self.mat[row1][i] = self.mat[row2][i]
-            self.mat[row2][i] = tmp
+        tmp = self.mat[row1]
+        self.mat[row1] = self.mat[row2]
+        self.mat[row2] = tmp
     
     def elementaryMul(self, row, scal):
         row -= 1
         for i in range(0,self.cols):
             self.mat[row][i] *= scal
     
+    def elementaryDiv(self, row, scal):
+        row -= 1
+        for i in range(0,self.cols):
+            self.mat[row][i] /= scal
+    
     def elementaryAdd(self, row1, scal, row2):
         row1 -= 1
         row2 -= 1
         for i in range(0,self.cols):
             self.mat[row2][i] += self.mat[row1][i] * scal
+
+    #Gauss algorithm for finding the row echleon form of the matrix
+    def gauss(self):
+        for i in range(self.rows):
+            for j in range(i,self.cols):
+                k = 2
+                while self.mat[i][j] == 0:              # Making sure the pivot element is non zero,
+                    self.elementarySwap(i+1,i+k)        # Using k = 2, because of the way the 
+                    if self.mat[i][j] == 0:             # elementarySwap method is defined.
+                        k += 1
+                    if i+k > self.rows:
+                        continue
+
+                self.elementaryDiv(i+1,self.mat[i][j])  #Making the pivot element 1
+
+                for k in range(i+1,self.rows):
+                    if self.mat[k][j] != 0: #If element under pivot isnt 0 make it 0
+                        self.elementaryAdd(i+1,-1*self.mat[k][j],k+1) 
+                    else:
+                        break
+                break
+
+
+
 
     
     def rowreduce(self):
