@@ -22,7 +22,7 @@ class Matrix():
         new = Matrix(rows=self.rows, columns = other.cols)
         for i in range(0,self.rows):
             for j in range(0,other.cols):
-                for k in range(0,self.rows):
+                for k in range(0,self.cols):
                     new.mat[i][j] += self.mat[i][k]*other.mat[k][j]
         return new
     
@@ -30,7 +30,7 @@ class Matrix():
         new = Matrix(rows=self.rows,columns=self.cols)
         for i in range(0,self.cols):
             for j in range(0,self.rows):
-                new.mat[i][j] = self.mat[i][j] * other
+                new.mat[j][i] = self.mat[j][i] * other
         return new
     
     def printRow(self, row):
@@ -47,7 +47,7 @@ class Matrix():
             raise ValueError("Trace can only be done on square matrix")
 
         sum = 0
-        for i in range(0,self.rows-1):
+        for i in range(0,self.rows):
             sum += self.mat[i][i]
         return sum
 
@@ -55,9 +55,10 @@ class Matrix():
     def elementarySwap(self,row1, row2):
         row1 -= 1
         row2 -= 1
-        tmp = self.mat[row1]
-        self.mat[row1] = self.mat[row2]
-        self.mat[row2] = tmp
+        for i in range(self.cols):
+            tmp = self.mat[row1][i]
+            self.mat[row1][i] = self.mat[row2][i]
+            self.mat[row2][i] = tmp
     
     def elementaryMul(self, row, scal):
         row -= 1
@@ -133,7 +134,7 @@ class Matrix():
         return self
     
     def __sub__(self, other):
-        self.__add__(other * -1)
+        return self.__add__(other * -1)
     
     def __isub__(self, other):
         self.__iadd__(other * -1)
