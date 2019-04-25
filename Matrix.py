@@ -1,4 +1,4 @@
-#import code  #Only for debugging
+import code  #Only for debugging
 
 class Matrix():
 
@@ -7,22 +7,22 @@ class Matrix():
             self.rows = rows
             self.cols = columns
             self.mat = []
-            for i in range(0,self.cols):
+            for i in range(0,self.rows):
                 self.mat.append([])
-                for  j in range(0,self.rows):
+                for  j in range(0,self.cols):
                     self.mat[i].append(0)
         elif(matrix):
             self.mat = matrix
-            self.rows = len(matrix[0])
-            self.cols = len(matrix)
+            self.rows = len(matrix)
+            self.cols = len(matrix[0])
 
     def matmul(self, other):
-        if(self.cols != self.rows):
+        if(self.cols != other.rows):
             raise ValueError("Matrix multiplication: Columns != Rows")
         new = Matrix(rows=self.rows, columns = other.cols)
-        for i in range(0,self.cols):
-            for j in range(0,other.rows):
-                for k in range(0,self.cols):
+        for i in range(0,self.rows):
+            for j in range(0,other.cols):
+                for k in range(0,self.rows):
                     new.mat[i][j] += self.mat[i][k]*other.mat[k][j]
         return new
     
@@ -32,6 +32,15 @@ class Matrix():
             for j in range(0,self.rows):
                 new.mat[i][j] = self.mat[i][j] * other
         return new
+    
+    def printRow(self, row):
+        for i in self.mat[row-1]:
+            print(i,end='\t')
+        print('\n')
+    
+    def printColumn(self,columns):
+        for i in range(self.rows):
+            print(self.mat[i][columns-1])
 
     def trace(self):
         if(self.rows != self.cols):
@@ -86,14 +95,9 @@ class Matrix():
                     else:
                         break
                 break
-
-
-
-
     
     def rowreduce(self):
         pass
-
 
     def __mul__(self,other):
         if type(other) == type(1):
@@ -109,37 +113,40 @@ class Matrix():
             self.cols = new.cols
             self.rows = new.rows
             self.mat = new.mat
+        return self
 
     def __add__(self,other):
         if self.rows != other.rows and self.cols != other.cols:
-            raise ValueError("Matrixes has to be of same size for addition")
+            raise ValueError("Matrices has to be of same size for addition")
         new = Matrix(rows = self.rows, columns = self.cols)
         for i in range(0,self.cols):
             for j in range(0,self.rows):
-                new.mat[i][j] = self.mat[i][j] + other.mat[i][j]
+                new.mat[j][i] = self.mat[j][i] + other.mat[j][i]
         return new
     
     def __iadd__(self, other):
         if self.rows != other.rows and self.cols != other.cols:
-            raise ValueError("Matrixes has to be of same size for addition")
+            raise ValueError("Matrices has to be of same size for addition")
         for i in range(0,self.cols):
             for j in range(0,self.rows):
-                self.mat[i][j] += other.mat[i][j]
+                self.mat[j][i] += other.mat[j][i]
+        return self
     
     def __sub__(self, other):
         self.__add__(other * -1)
     
     def __isub__(self, other):
         self.__iadd__(other * -1)
+        return self
     
     def __repr__(self):
         return f'Matrix {self.rows} x {self.cols}, with {type(self.mat[0][0])} elements\n'+f'{self}'
     
     def __str__(self):
         str = ''
-        for  i in range(0,self.cols):
+        for  i in range(0,self.rows):
             str = str + '[\t'
-            for j in range(0, self.rows):
+            for j in range(0, self.cols):
                 str = str + f'{self.mat[i][j]}' + '\t'
             str = str + ']\n'
         return str 
@@ -147,3 +154,11 @@ class Matrix():
 class Vector(Matrix):
     def __init__(self,dim):
         super.__init__(rows = dim, columns = 1)
+
+
+x = Matrix(matrix=[[3],[2],[1]])
+y = Matrix(matrix=[[1,0,0],[0,1,0]])
+k = Matrix(matrix=[[1,2,3],[2,3,4],[3,4,5],[4,5,6]])
+l = Matrix(matrix=[[1,2,3],[2,3,4],[3,4,5]])
+
+code.interact(local=locals())
