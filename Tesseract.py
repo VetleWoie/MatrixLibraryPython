@@ -4,6 +4,12 @@ from Matrix import Vector
 import math
 
 
+RED = (255,0,0)
+GREEN = (0,255,0)
+BLUE = (0,0,255)
+WHITE = (255,255,255)
+
+
 
 class Simulation:
     def __init__(self,width, height):
@@ -32,6 +38,10 @@ class Simulation:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
+            for point in self.cube:
+                p = self.project * point
+                pygame.draw.circle(self.screen,RED,(p.mat[0][0],p.mat[1][0]), 20)
+            pygame.display.update()
         
         
             
