@@ -1,4 +1,4 @@
-import code  #Only for debugging
+# import code  #Only for debugging
 
 class Matrix():
 
@@ -157,9 +157,9 @@ class Vector(Matrix):
         super.__init__(rows = dim, columns = 1)
 
 
-x = Matrix(matrix=[[3],[2],[1]])
-y = Matrix(matrix=[[1,0,0],[0,1,0]])
-k = Matrix(matrix=[[1,2,3],[2,3,4],[3,4,5],[4,5,6]])
-l = Matrix(matrix=[[1,2,3],[2,3,4],[3,4,5]])
+# x = Matrix(matrix=[[3],[2],[1]])
+# y = Matrix(matrix=[[1,0,0],[0,1,0]])
+# k = Matrix(matrix=[[1,2,3],[2,3,4],[3,4,5],[4,5,6]])
+# l = Matrix(matrix=[[1,2,3],[2,3,4],[3,4,5]])
 
-code.interact(local=locals())
+# code.interact(local=locals())
