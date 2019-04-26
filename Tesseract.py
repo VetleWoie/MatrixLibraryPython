@@ -10,79 +10,68 @@ BLUE = (0,0,255)
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 
-SCALE = 50
+SCALE = 100
 
 
 
 class Simulation:
-    def __init__(self,width, height):
+    def __init__(self,width, height,dim):
         pygame.init()
         self.size = (width, height)
-        #self.screen = pygame.display.set_mode(self.size)
+        self.screen = pygame.display.set_mode(self.size)
         self.scale = SCALE
+        self.dim = dim
         self.clock = pygame.time.Clock()
 
-        self.project = Matrix(matrix=[  [1,0,0,0],
-                                        [0,1,0,0],
-                                     ])
+        self.projection = self.project(dim)
+        self.cube = self.box(dim)
 
-        self.cube = [
-                        Matrix(matrix=[[0.5],[0.5],[-0.5],[-0.5]]), #1
-                        Matrix(matrix=[[-0.5],[0.5],[-0.5],[-0.5]]), #2
-                        Matrix(matrix=[[-0.5],[-0.5],[-0.5],[-0.5]]), #3
-                        Matrix(matrix=[[0.5],[-0.5],[-0.5],[-0.5]]), #4
-                        Matrix(matrix=[[0.5],[0.5],[0.5],[-0,5]]), #5
-                        Matrix(matrix=[[-0.5],[0.5],[0.5],[-0.5]]), #6
-                        Matrix(matrix=[[-0.5],[-0.5],[0.5],[-0.5]]), #7
-                        Matrix(matrix=[[0.5],[-0.5],[0.5],[-0.5]]),  #8
-                        Matrix(matrix=[[0.5],[0.5],[-0.5],[0.5]]), #1
-                        Matrix(matrix=[[-0.5],[0.5],[-0.5],[0.5]]), #2
-                        Matrix(matrix=[[-0.5],[-0.5],[-0.5],[0.5]]), #3
-                        Matrix(matrix=[[0.5],[-0.5],[-0.5],[0.5]]), #4
-                        Matrix(matrix=[[0.5],[0.5],[0.5],[0,5]]), #5
-                        Matrix(matrix=[[-0.5],[0.5],[0.5],[0.5]]), #6
-                        Matrix(matrix=[[-0.5],[-0.5],[0.5],[0.5]]), #7
-                        Matrix(matrix=[[0.5],[-0.5],[0.5],[0.5]])  #8
-                    ]
+        self.simulate()
 
-        self.box(2)
+    def project(self,dim):
+
+        projection = Matrix(rows=2,columns=dim)
+        projection.mat[0][0] = 1
+        projection.mat[1][1] = 1
+        return projection
     
     def box(self,dim):
         corners = 2**dim
         cube = []
         for i in range(corners):
             cube.append(Matrix(rows=dim,columns=1))
+            for j in range(dim):
+                cube[i].mat[j][0] = -0.5
 
         for i in range(corners):
-            for j in range(dim):
-                cube[i].mat[j][0] = 0.5 * (-1)**j * (-1)**i
+            for k,j in zip(range(dim),reversed(bin(i))):
+                if j == '1':
+                    cube[i].mat[k][0] *= -1
+                elif j == 'b':
+                    break
+                else:
+                    continue
+        return cube
 
 
 
     def simulate(self):
         angle = 0
         while True:
-            #self.screen.fill(BLACK)
-            if(angle > 360):
-                self.screen.fill(BLACK)
-                angle = 0
+            self.screen.fill(BLACK)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
             for point in self.cube:
-                point = self.rotateZ(angle) * point
-                #point = self.rotateY(angle) * point
-                point = self.rotateX(angle) * point
-                point = self.rotateW(angle) * point
-                point = point * 500
-                point = self.project * point
+                point = self.rotate(self.dim,angle,1,2) * point
+                point = point * self.scale
+                point = self.projection * point
                 
                 pygame.draw.circle(self.screen,RED,(int(point.mat[0][0] + self.size[0]/2),int(point.mat[1][0]+self.size[1]/2)), 5)
             pygame.display.update()
 
-            angle += 0.0001
+            angle += 0.001
             self.clock.tick(60)
-
 
     def rotate(self,dim, angle, axis1, axis2):
         axis1 -= 1
@@ -98,39 +87,14 @@ class Simulation:
         rotation.mat[axis2][axis1] = sine
         rotation.mat[axis2][axis2] = cos
 
+        for i in range(dim):
+            if i != axis1 or i != axis2:
+                rotation.mat[i][i] = 1 
         return rotation
-    
-    def rotateZ(self,angle):
-        angle *= 180 / math.pi 
-        sine = math.sin(angle)
-        cos = math.cos(angle)
-
-        return Matrix(matrix=[[1,0,0,0],[0,1,0,0],[0,0,cos,-sine],[0,0,sine,cos]])
-
-    def rotateY(self,angle):
-        angle *= 180 / math.pi 
-        sine = math.sin(angle)
-        cos = math.cos(angle)
-
-        return Matrix(matrix=[[1,0,0,0],[0,cos,0,-sine],[0,0,1,0],[0,sine,0,cos]])
-
-    def rotateX(self,angle):
-        angle *= 180 / math.pi 
-        sine = math.sin(angle)
-        cos = math.cos(angle)
-
-        return Matrix(matrix=[[1,0,0,0],[0,cos,-sine,0],[0,sine,cos,0],[0,0,0,0]])
-    
-    def rotateW(self,angle):
-        angle *= 180 / math.pi 
-        sine = math.sin(angle)
-        cos = math.cos(angle)
-
-        return Matrix(matrix=[[cos,0,0,-sine],[0,1,0,0],[0,0,1,0],[cos,0,0,sine]])
        
         
             
-Simulation(1000,1000)
+Simulation(500,500,3)
 
 
 
