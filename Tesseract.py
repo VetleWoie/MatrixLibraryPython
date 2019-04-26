@@ -18,7 +18,7 @@ class Simulation:
     def __init__(self,width, height):
         pygame.init()
         self.size = (width, height)
-        self.screen = pygame.display.set_mode(self.size)
+        #self.screen = pygame.display.set_mode(self.size)
         self.scale = SCALE
         self.clock = pygame.time.Clock()
 
@@ -45,21 +45,33 @@ class Simulation:
                         Matrix(matrix=[[0.5],[-0.5],[0.5],[0.5]])  #8
                     ]
 
-        self.simulate()
+        self.box(2)
     
     def box(self,dim):
-        pass
+        corners = 2**dim
+        cube = []
+        for i in range(corners):
+            cube.append(Matrix(rows=dim,columns=1))
+
+        for i in range(corners):
+            for j in range(dim):
+                cube[i].mat[j][0] = 0.5 * (-1)**j * (-1)**i
+
+
 
     def simulate(self):
         angle = 0
         while True:
             #self.screen.fill(BLACK)
+            if(angle > 360):
+                self.screen.fill(BLACK)
+                angle = 0
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
             for point in self.cube:
                 point = self.rotateZ(angle) * point
-                point = self.rotateY(angle) * point
+                #point = self.rotateY(angle) * point
                 point = self.rotateX(angle) * point
                 point = self.rotateW(angle) * point
                 point = point * 500
@@ -93,14 +105,14 @@ class Simulation:
         sine = math.sin(angle)
         cos = math.cos(angle)
 
-        return Matrix(matrix=[[cos,-sine,0,0],[sine,cos,0,0],[0,0,1,0],[0,0,0,0]])
+        return Matrix(matrix=[[1,0,0,0],[0,1,0,0],[0,0,cos,-sine],[0,0,sine,cos]])
 
     def rotateY(self,angle):
         angle *= 180 / math.pi 
         sine = math.sin(angle)
         cos = math.cos(angle)
 
-        return Matrix(matrix=[[cos,0,-sine,0],[0,1,0,0],[sine,0,cos,0],[0,0,0,0]])
+        return Matrix(matrix=[[1,0,0,0],[0,cos,0,-sine],[0,0,1,0],[0,sine,0,cos]])
 
     def rotateX(self,angle):
         angle *= 180 / math.pi 
@@ -114,7 +126,7 @@ class Simulation:
         sine = math.sin(angle)
         cos = math.cos(angle)
 
-        return Matrix(matrix=[[1,0,0,0],[0,0,cos,-sine],[0,0,0,0],[0,0,cos,sine]])
+        return Matrix(matrix=[[cos,0,0,-sine],[0,1,0,0],[0,0,1,0],[cos,0,0,sine]])
        
         
             
