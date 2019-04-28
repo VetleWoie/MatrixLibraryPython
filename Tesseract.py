@@ -10,7 +10,8 @@ BLUE = (0,0,255)
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 
-SCALE = 100
+SCALE = 200
+DOTSIZE = 2
 
 
 
@@ -23,16 +24,19 @@ class Simulation:
         self.dim = dim
         self.clock = pygame.time.Clock()
 
-        self.projection = self.project(dim)
+        self.projections = []
+        for i in reversed(range(3,dim+1)):
+            self.projections.append(self.project(i,i-1))
+        self.project(dim,dim-1)
         self.cube = self.box(dim)
 
         self.simulate()
 
-    def project(self,dim):
+    def project(self,fromDim, toDim):
 
-        projection = Matrix(rows=2,columns=dim)
-        projection.mat[0][0] = 1
-        projection.mat[1][1] = 1
+        projection = Matrix(rows=toDim,columns=fromDim)
+        for i in range(toDim):
+            projection.mat[i][i] = 1
         return projection
     
     def box(self,dim):
@@ -56,21 +60,28 @@ class Simulation:
 
 
     def simulate(self):
+        draw = False
         angle = 0
         while True:
-            self.screen.fill(BLACK)
+            if not draw:
+                self.screen.fill(BLACK)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        draw = not draw
             for point in self.cube:
-                point = self.rotate(self.dim,angle,1,2) * point
+                for i in range(self.dim-1):
+                    point = self.rotate(self.dim,angle,i,i+1) * point
                 point = point * self.scale
-                point = self.projection * point
-                
-                pygame.draw.circle(self.screen,RED,(int(point.mat[0][0] + self.size[0]/2),int(point.mat[1][0]+self.size[1]/2)), 5)
+                for i in self.projections:
+                    point = i * point  
+                pygame.draw.circle(self.screen,RED,(int(point.mat[0][0])+int(self.size[0]/2),int(point.mat[1][0])+int(self.size[1]/2)), DOTSIZE)
+            
             pygame.display.update()
 
-            angle += 0.001
+            angle += 0.0001
             self.clock.tick(60)
 
     def rotate(self,dim, angle, axis1, axis2):
@@ -88,13 +99,16 @@ class Simulation:
         rotation.mat[axis2][axis2] = cos
 
         for i in range(dim):
-            if i != axis1 or i != axis2:
+            if not(i == axis1 or i == axis2):
                 rotation.mat[i][i] = 1 
         return rotation
-       
+
+    def lines(self,cube):
+
+        pass
         
             
-Simulation(500,500,3)
+Simulation(500,500,4)
 
 
 
