@@ -133,7 +133,7 @@ class Simulation:
             
         
             
-Simulation(500,500,2)
+Simulation(500,500,3)
 
 
 
