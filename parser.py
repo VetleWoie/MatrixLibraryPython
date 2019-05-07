@@ -77,6 +77,20 @@ class ParseTree():
             return int(self.value)
 
 tree = ParseTree(None,None,None,None)
-tree.parse("4*4*4*4")
+tree.parse("4*4*(4+4)")
 x=tree.evaluate()
-x
+print(x)
+
+"""  
+<expr> ::= <term> "+" <expr>
+        |  <term>
+
+<term> ::= <factor> "*" <term>
+        |  <factor>
+
+<factor> ::=  "(" <expr> ")"
+        |  <const>
+
+<const> ::= integer 
+
+ """
