@@ -62,7 +62,7 @@ class ParseTree():
     
     def parseNum(self,string):
         j = self.i-1
-        while self.i < len(string) and string[self.i].isdigit():
+        while self.i < len(string) and (string[self.i].isdigit() or string[self.i].isalpha()):
             self.i += 1
         return ParseTree(None, None, 'NUM', string[j:self.i])
 
@@ -92,7 +92,7 @@ class ParseTree():
             return int(self.value)
 
 tree = ParseTree(None,None,None,None)
-tree.parse("12+4*3")
+tree.parse("12a+4*3")
 x=tree.evaluate()
 print(x)
 
