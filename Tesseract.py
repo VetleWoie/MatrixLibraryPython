@@ -75,8 +75,9 @@ class Simulation:
                     elif event.key == pygame.K_l:
                         lines = not lines
             for point in self.cube:
-                for i in range(self.dim-1):
-                    point = self.rotate(self.dim,angle,i,i+1) * point
+                for j in range(2): #Dont know why this works, but it works for range >= 2
+                    for i in range(1,self.dim): #Need to rotate the axiss i in [1,dim>
+                        point = self.rotate(self.dim,angle,i,self.dim) * point # Need to rotate dimension i with dimension dim
                 point = point * self.scale
                 point = self.projection * point 
                 point.mat[0][0] = int(point.mat[0][0] + self.size[0]/2)
